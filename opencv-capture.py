@@ -10,6 +10,9 @@ except ImportError:
     print( "ERROR python-opencv must be installed")
     exit(1)
 import numpy as np
+import Atres
+
+atres = Atres.atres()
 
 class OpenCvCapture(object):
     """
@@ -48,6 +51,7 @@ class OpenCvCapture(object):
                 break
             # print(img.shape)
             if True:
+                atres.bodytemp2color(img)
                 data = cv2.resize(img, (640, 480))
                 minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(data)
                 img = raw_to_8bit(data)
