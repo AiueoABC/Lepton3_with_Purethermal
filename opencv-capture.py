@@ -27,7 +27,8 @@ class OpenCvCapture(object):
             cv2_cap = cv2.VideoCapture(i)
             if cv2_cap.isOpened():
                 cv2_cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"Y16 "))
-                cv2_cap.set(cv2.CAP_PROP_CONVERT_RGB, False)
+                cv2_cap.set(cv2.CAP_PROP_CONVERT_RGB, 0.0)
+                # cv2_cap.set(cv2.CAP_PROP_CONVERT_RGB, False)
                 break
 
         if not cv2_cap.isOpened():
@@ -45,13 +46,15 @@ class OpenCvCapture(object):
         print( "Running, ESC or Ctrl-c to exit...")
         while True:
             ret, img = self.cv2_cap.read()
+            if img.shape == (1, 39040):
+                reshapehere=1
             img = img[0:120, :]
             if ret == False:
                 print( "Error reading image")
                 break
-            # print(img.shape)
+            print(img.shape)
             if True:
-                atres.bodytemp2color(img)
+                # atres.bodytemp2color(img)
                 data = cv2.resize(img, (640, 480))
                 minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(data)
                 img = raw_to_8bit(data)
