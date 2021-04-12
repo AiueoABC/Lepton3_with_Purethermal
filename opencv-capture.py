@@ -56,8 +56,8 @@ class OpenCvCapture(object):
                 print("Error reading image")
                 break
             if True:
-                atresimg = atres.bodytemp2color(img)
                 data = cv2.resize(img, (640, 480))
+                atresimg = atres.bodytemp2color(data)
                 minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(data)
                 img = raw_to_8bit(data)
                 display_temperature(img, minVal, minLoc, (255, 0, 0))

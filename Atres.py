@@ -43,8 +43,8 @@ def _raw_to_8bit(data):
 
 
 def _raw_to_8bit_body(data):
-    data = np.clip(data, 25000, 45000)
-    cv2.normalize(data, data, 0, 65535, cv2.NORM_MINMAX)
+    # data = np.clip(data, 25000, 45000)
+    data = np.uint16(np.clip(data, 20000, 45000) * 1.4)
     np.right_shift(data, 8, data)
     return np.uint8(data)
 
