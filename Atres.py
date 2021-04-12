@@ -22,6 +22,14 @@ class atres:
             cv2.imwrite("AtresDataForBody.png", atresimg)
         return atresimg
 
+    def rawtemp2color(self, int16KelvinArray, save=True):
+        bStack, gStack = np.uint8(divmod(int16KelvinArray, 256))
+        rStack = bStack
+        atresimg = cv2.merge((bStack, gStack, rStack))
+        if save:
+            cv2.imwrite("AtresDataRAW.png", atresimg)
+        return atresimg
+
     def atresimg2temp(self, atresimg):
         upperStack, lowerStack, _ = cv2.split(atresimg)
         int16KelvinArray = np.uint16(upperStack * 256 + lowerStack)

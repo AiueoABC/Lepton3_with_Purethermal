@@ -23,7 +23,7 @@ class OpenCvCapture(object):
         # capture from the LAST camera in the system
         # presumably, if the system has a built-in webcam it will be the first
         for i in reversed(range(10)):
-            print( "Testing for presense of camera #{0}...".format(i))
+            print("Testing for presense of camera #{0}...".format(i))
             cv2_cap = cv2.VideoCapture(i)
             if cv2_cap.isOpened():
                 cv2_cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"Y16 "))
@@ -32,7 +32,7 @@ class OpenCvCapture(object):
                 break
 
         if not cv2_cap.isOpened():
-            print( "Camera not found!")
+            print("Camera not found!")
             exit(1)
 
         self.cv2_cap = cv2_cap
@@ -44,16 +44,17 @@ class OpenCvCapture(object):
 
         cv2.namedWindow("AtresImg", cv2.WINDOW_NORMAL)
         cv2.namedWindow("Lepton Radiometry", cv2.WINDOW_NORMAL)
-        print( "Running, ESC or Ctrl-c to exit...")
+        print("Running, ESC or Ctrl-c to exit...")
         while True:
             ret, img = self.cv2_cap.read()
             if img.shape == (1, 39040):
-                reshapehere=1
+                # 122*160*2
+                a = np.reshape(img, [122, 320])
+                img = np.array([a[:, 2 * i] + a[:, 2 * i + 1] for i in range(int(len(a[0]) / 2))]).T
             img = img[0:120, :]
             if ret == False:
-                print( "Error reading image")
+                print("Error reading image")
                 break
-            print(img.shape)
             if True:
                 atresimg = atres.bodytemp2color(img)
                 data = cv2.resize(img, (640, 480))
@@ -80,8 +81,8 @@ def raw_to_8bit(data):
 def display_temperature(img, val_k, loc, color):
     # val = ktof(val_k)
     val = ktoc(val_k)
-    # cv2.putText(img,"{0:.1f} degF".format(val), loc, cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
-    cv2.putText(img,"{0:.1f} degC".format(val), loc, cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
+    # cv2.putText(img, "{0:.1f} degF".format(val), loc, cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
+    cv2.putText(img, "{0:.1f} degC".format(val), loc, cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
     x, y = loc
     cv2.line(img, (x - 2, y), (x + 2, y), color, 1)
     cv2.line(img, (x, y - 2), (x, y + 2), color, 1)
