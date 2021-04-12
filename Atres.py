@@ -1,5 +1,6 @@
 """
 AiueoABC Temperature Record System (Atres)
+エイターズ
 """
 import cv2
 import numpy as np
@@ -33,7 +34,7 @@ class atres:
     def atresimg2temp(self, atresimg):
         upperStack, lowerStack, _ = cv2.split(atresimg)
         int16KelvinArray = np.uint16(upperStack * 256 + lowerStack)
-        return  int16KelvinArray
+        return int16KelvinArray
 
 
 def _raw_to_8bit(data):
@@ -43,8 +44,8 @@ def _raw_to_8bit(data):
 
 
 def _raw_to_8bit_body(data):
-    # data = np.clip(data, 25000, 45000)
-    data = np.uint16(np.clip(data, 20000, 45000) * 1.4)
-    np.right_shift(data, 8, data)
+    data = (np.clip(data, 29300, 31800) - 29300) / 2500 * 255
+    # data = np.uint16(np.clip(data, 29300, 31800) * 2)
+    # np.right_shift(data, 8, data)
     return np.uint8(data)
 
