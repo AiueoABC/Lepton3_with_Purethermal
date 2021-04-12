@@ -42,6 +42,7 @@ class OpenCvCapture(object):
         Run loop for cv2 capture from lepton
         """
 
+        cv2.namedWindow("AtresImg", cv2.WINDOW_NORMAL)
         cv2.namedWindow("Lepton Radiometry", cv2.WINDOW_NORMAL)
         print( "Running, ESC or Ctrl-c to exit...")
         while True:
@@ -54,12 +55,13 @@ class OpenCvCapture(object):
                 break
             print(img.shape)
             if True:
-                # atres.bodytemp2color(img)
+                atresimg = atres.bodytemp2color(img)
                 data = cv2.resize(img, (640, 480))
                 minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(data)
                 img = raw_to_8bit(data)
                 display_temperature(img, minVal, minLoc, (255, 0, 0))
                 display_temperature(img, maxVal, maxLoc, (0, 0, 255))
+                cv2.imshow('AtresImg', atresimg)
                 cv2.imshow('Lepton Radiometry', img)
             else:
                 cv2.imshow("Lepton Radiometry", cv2.resize(img, (640, 480)))
