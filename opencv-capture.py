@@ -26,6 +26,9 @@ class OpenCvCapture(object):
             print("Testing for presense of camera #{0}...".format(i))
             cv2_cap = cv2.VideoCapture(i)
             if cv2_cap.isOpened():
+                ret, img = cv2_cap.read()
+                if img.shape != (122, 160, 3):  # LEPTON3
+                    continue
                 cv2_cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"Y16 "))
                 cv2_cap.set(cv2.CAP_PROP_CONVERT_RGB, 0.0)
                 # cv2_cap.set(cv2.CAP_PROP_CONVERT_RGB, False)
@@ -43,13 +46,14 @@ class OpenCvCapture(object):
         """
 
         cv2.namedWindow("AtresImg", cv2.WINDOW_NORMAL)
+        cv2.setMouseCallback("AtresImg", mouse_event)
         cv2.namedWindow("Lepton Radiometry", cv2.WINDOW_NORMAL)
         print("Running, ESC or Ctrl-c to exit...")
         while True:
             ret, img = self.cv2_cap.read()
-            if img.shape == (1, 39040):
+            if img.shape == (1, 39040):  # LEPTON3
                 # 122*160*2
-                a = np.reshape(img, [122, 320])
+                a = np.reshape(img, [122, 320])  # LEPTON3
                 img = np.array([256 * a[:, 2 * i] + a[:, 2 * i + 1] for i in range(int(len(a[0]) / 2))]).T
             img = img[0:120, :]
             if ret == False:
@@ -94,6 +98,14 @@ def ktof(val):
 
 def ktoc(val):
     return (val - 27315) / 100.0
+
+
+def mouse_event(event, x, y, flags, param):
+    wname, img, ptlist = param
+    if event == cv2.EVENT_MOUSEMOVE:
+        pxls = img[x, y]
+        kVal = pxls[0] * 256 + pxls[1]
+        print(ktoc(kVal))
 
 
 if __name__ == '__main__':
