@@ -50,7 +50,7 @@ class OpenCvCapture(object):
             if img.shape == (1, 39040):
                 # 122*160*2
                 a = np.reshape(img, [122, 320])
-                img = np.array([a[:, 2 * i] + a[:, 2 * i + 1] for i in range(int(len(a[0]) / 2))]).T
+                img = np.array([256 * a[:, 2 * i] + a[:, 2 * i + 1] for i in range(int(len(a[0]) / 2))]).T
             img = img[0:120, :]
             if ret == False:
                 print("Error reading image")
