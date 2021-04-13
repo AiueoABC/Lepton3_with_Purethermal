@@ -44,17 +44,15 @@ class OpenCvCapture(object):
         """
         Run loop for cv2 capture from lepton
         """
-
-        cv2.namedWindow("AtresImg", cv2.WINDOW_NORMAL)
-        cv2.setMouseCallback("AtresImg", mouse_event)
-        cv2.namedWindow("Lepton Radiometry", cv2.WINDOW_NORMAL)
+        cv2.namedWindow("AtresImg", cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)
+        cv2.namedWindow("Lepton Radiometry", cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)
         print("Running, ESC or Ctrl-c to exit...")
         while True:
             ret, img = self.cv2_cap.read()
-            if img.shape == (1, 39040):  # LEPTON3
-                # 122*160*2
-                a = np.reshape(img, [122, 320])  # LEPTON3
-                img = np.array([256 * a[:, 2 * i] + a[:, 2 * i + 1] for i in range(int(len(a[0]) / 2))]).T
+            # if img.shape == (1, 39040):  # LEPTON3
+            #     # 122*160*2
+            #     a = np.reshape(img, [122, 320])  # LEPTON3
+            #     img = np.array([256 * a[:, 2 * i] + a[:, 2 * i + 1] for i in range(int(len(a[0]) / 2))]).T
             img = img[0:120, :]
             if ret == False:
                 print("Error reading image")
@@ -62,6 +60,7 @@ class OpenCvCapture(object):
             if True:
                 data = cv2.resize(img, (640, 480))
                 atresimg = atres.bodytemp2color(data)
+                cv2.setMouseCallback("AtresImg", mouse_event, atresimg)
                 minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(data)
                 img = raw_to_8bit(data)
                 display_temperature(img, minVal, minLoc, (255, 0, 0))
@@ -100,10 +99,9 @@ def ktoc(val):
     return (val - 27315) / 100.0
 
 
-def mouse_event(event, x, y, flags, param):
-    wname, img, ptlist = param
+def mouse_event(event, x, y, flag, img):
     if event == cv2.EVENT_MOUSEMOVE:
-        pxls = img[x, y]
+        pxls = img[y, x]
         kVal = pxls[0] * 256 + pxls[1]
         print(ktoc(kVal))
 
