@@ -100,10 +100,9 @@ def ktoc(val):
 
 
 def mouse_event(event, x, y, flag, img):
-    if event == cv2.EVENT_MOUSEMOVE:
-        pxls = img[y, x]
-        kVal = pxls[0] * 256 + pxls[1]
-        print(ktoc(kVal))
+    pxls = img[y, x]
+    kVal = pxls[0] * 256 + pxls[1]
+    print(ktoc(kVal))
 
 
 if __name__ == '__main__':
