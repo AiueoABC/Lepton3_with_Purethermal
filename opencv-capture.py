@@ -73,7 +73,7 @@ class OpenCvCapture(object):
             key = cv2.waitKey(5)
             if key == 27:
                 break
-            elif key == ord(s):
+            elif key == ord('s'):
                 cv2.imwrite("./img/atresimg_" + str(time.time()).replace(".", "") + ".png", atresimg)
 
 
