@@ -10,6 +10,7 @@ except ImportError:
     print( "ERROR python-opencv must be installed")
     exit(1)
 import numpy as np
+import time
 import Atres
 
 atres = Atres.atres()
@@ -69,8 +70,12 @@ class OpenCvCapture(object):
                 cv2.imshow('Lepton Radiometry', img)
             else:
                 cv2.imshow("Lepton Radiometry", cv2.resize(img, (640, 480)))
-            if cv2.waitKey(5) == 27:
+            key = cv2.waitKey(5)
+            if key == 27:
                 break
+            elif key == ord(s):
+                cv2.imwrite("./img/atresimg_" + str(time.time()).replace(".", "") + ".png", atresimg)
+
 
         cv2.destroyAllWindows()
 
