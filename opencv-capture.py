@@ -78,6 +78,7 @@ class OpenCvCapture(object):
 
 
         cv2.destroyAllWindows()
+        self.cv2_cap.release()
 
 
 def raw_to_8bit(data):
